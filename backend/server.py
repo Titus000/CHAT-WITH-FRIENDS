@@ -318,6 +318,30 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
 async def health_check():
     return {"status": "ok"}
 
+# Serve React app for all non-API routes
+@app.get("/{catchall:path}")
+async def serve_react_app(request: Request):
+    """Serve the React app for all non-API routes"""
+    static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "build")
+    index_file = os.path.join(static_dir, "index.html")
+    
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    else:
+        raise HTTPException(status_code=404, detail="React app not found")
+
+# Root route serves React app
+@app.get("/")
+async def root():
+    """Serve the React app at root"""
+    static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "build")
+    index_file = os.path.join(static_dir, "index.html")
+    
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    else:
+        raise HTTPException(status_code=404, detail="React app not found")
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
