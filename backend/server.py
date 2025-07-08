@@ -20,6 +20,7 @@ from jwt.exceptions import InvalidTokenError
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017/')
 JWT_SECRET = os.environ.get('JWT_SECRET', 'your-secret-key-here')
 JWT_ALGORITHM = 'HS256'
+PORT = int(os.environ.get('PORT', 8001))
 
 # MongoDB setup
 client = MongoClient(MONGO_URL)
@@ -29,6 +30,11 @@ messages_collection = db.messages
 
 # FastAPI app setup
 app = FastAPI(title="Chat with Friends API")
+
+# Serve static files from the React build directory
+static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "build")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=os.path.join(static_dir, "static")), name="static")
 
 # CORS setup
 app.add_middleware(
