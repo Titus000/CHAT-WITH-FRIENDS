@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBearer, HTTPAuthorizationBearer
+from fastapi.security import HTTPBearer
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr
 from pymongo import MongoClient
